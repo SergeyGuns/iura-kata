@@ -1,0 +1,103 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Checking</title>
+    <style>
+        body {
+            font-family: monospace;
+            font-size: 24px;
+        }
+        .sms-item {
+            display: flex;
+            justify-content: space-between;
+            animation: fadeIn .5s;
+        }
+        .sms-item:hover {
+            color: white;
+            background-color: black;
+            transition: all .3s;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    api key : <input type="text" name="api-key" id="api-key"> <button class="request" onclick="requestAPI()">Запрос</button>
+    <div hidden class="sms-item" >
+        <div>#date</div>
+        <div class="value" style="cursor: pointer;"> #value [COPY]</div>
+    </div>
+    <div onclick="copy(event)" class="result">
+
+    </div>
+</body>
+<script>
+    function copy(ev) {
+        if (ev.target.classList.contains('value')) {
+            console.log(ev.target)
+            const value = ev.target.innerHTML.split('[')[0].trim()
+            ev.target.style.background = '#00FF00'
+            navigator.clipboard.writeText(value)
+        }
+    }
+    const responseExpamle = [
+        {
+            date: '11:00',
+            value: '4321' 
+        },
+        {
+            date: '12:00',
+            value: '54321' 
+        },
+        {
+            date: '13:00',
+            value: '64321' 
+        },
+        {
+            date: '14:00',
+            value: '74321' 
+        },
+        {
+            date: '15:00',
+            value: '84321' 
+        },
+    ];
+
+        const API_KEY = "api-key"
+        const savedApiKeyValue = localStorage.getItem(API_KEY)
+        const resultElement = document.querySelector('.result')
+        const apiKeyInputElement = document.getElementById(API_KEY)
+        const SMSItemEl = document.querySelector('.sms-item')
+        const requestEl = document.querySelector('.request')
+        let apiKeyValue = ''
+        if (savedApiKeyValue) {
+            apiKeyValue = savedApiKeyValue
+            apiKeyInputElement.value = savedApiKeyValue
+        }
+        apiKeyInputElement.addEventListener('input', ({currentTarget:{value}})=>{
+            localStorage.setItem(API_KEY, value)
+            apiKeyValue = value
+        })
+
+        function requestAPI() {
+            setTimeout(()=>handleRequestAPI(responseExpamle), 1000)
+        }
+
+        function handleRequestAPI(result) {
+
+            result.forEach((item)=> {
+                const newSMSItem = SMSItemEl.cloneNode(true)
+                Object.keys(item).map((key)=> {
+                    newSMSItem.innerHTML = newSMSItem.innerHTML.replace('#'+key, item[key])
+                })
+                resultElement.appendChild(newSMSItem)
+            })
+            requestEl.innerHTML = 'Запрос :' + new Date().toLocaleTimeString()
+        }
+
+</script>
+</html>
