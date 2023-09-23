@@ -9,14 +9,17 @@
             font-size: 24px;
         }
         .sms-item {
+            position: relative;
             display: flex;
             justify-content: space-between;
             animation: fadeIn .5s;
         }
+        .value {
+            position: relative;
+        }
         .sms-item:hover {
             color: white;
             background-color: black;
-            transition: all .3s;
         }
         @keyframes fadeIn {
             from {
@@ -27,7 +30,7 @@
 </head>
 <body>
     api key : <input type="text" name="api-key" id="api-key"> <button class="request" onclick="requestAPI()">Запрос</button>
-    <div hidden class="sms-item" >
+    <div class="sms-item" >
         <div>#date</div>
         <div class="value" style="cursor: pointer;"> #value [COPY]</div>
     </div>
@@ -37,13 +40,20 @@
 </body>
 <script>
     function copy(ev) {
-        if (ev.target.classList.contains('value')) {
-            console.log(ev.target)
-            const value = ev.target.innerHTML.split('[')[0].trim()
-            ev.target.style.background = '#00FF00'
-            navigator.clipboard.writeText(value)
+        console.log(ev.target)
+        const value = ev.target.innerHTML.split('[')[0].trim()
+        ev.target.style.background = '#00FF00'
+        navigator.clipboard.writeText(value)
+    }
+
+    function hoverMove(ev) {
+        if (ev.target.classList.contains('sms-item')) {
+            console.log('hoverMove')
+            ev.target.style.top = Math.random() * 100 + 'px'
+            ev.target.style.left = Math.random() * 1000 + 'px'
         }
     }
+
     const responseExpamle = [
         {
             date: '11:00',
@@ -73,6 +83,7 @@
         const apiKeyInputElement = document.getElementById(API_KEY)
         const SMSItemEl = document.querySelector('.sms-item')
         const requestEl = document.querySelector('.request')
+        const isTrial = true
         let apiKeyValue = ''
         if (savedApiKeyValue) {
             apiKeyValue = savedApiKeyValue
@@ -84,6 +95,14 @@
         })
 
         function requestAPI() {
+            fetch("https://api.exolve.ru/messaging/v1/GetList", {
+                headers: {
+                    Authentication: 'Bearer ' + apiKeyValue
+                },
+                method: "POST"
+            }).then(res => {
+                console.log(res)
+            })
             setTimeout(()=>handleRequestAPI(responseExpamle), 1000)
         }
 
