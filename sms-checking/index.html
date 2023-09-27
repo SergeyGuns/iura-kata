@@ -138,7 +138,7 @@
             
         }
         function handleRequestJSON(result) {
-            resultElement.innerHTML = `<pre><code> ${JSON.stringify(result)}</pre></code>`
+            resultElement.innerHTML = `<pre><code> ${JSON.stringify(result, null, ' ')}</pre></code>`
         }
         function handleRequestAPI(result) {
 
