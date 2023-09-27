@@ -119,8 +119,22 @@
                 method: "POST",
                 mode: "cors"
             }).then(res => {
-                handleRequestJSON(res.json())
-            }).catch(e => console.log(e))
+                if(res.status === 404) {
+                    fetch(apiURLValue, {
+                        headers: {
+                            Authentication: 'Bearer ' + apiKeyValue
+                        },
+                        method: "GET",
+                        mode: "cors"
+                    }).then((res)=>{
+                        res.json().then(handleRequestJSON)
+                    })
+                }
+                console.log(res)
+                res.json().then(handleRequestJSON)
+            }).catch(e => {
+                console.log(e)
+            })
             
         }
         function handleRequestJSON(result) {
