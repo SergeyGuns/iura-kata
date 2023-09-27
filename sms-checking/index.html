@@ -29,7 +29,12 @@
     </style>
 </head>
 <body>
-    api key : <input type="text" name="api-key" id="api-key"> <button class="request" onclick="requestAPI()">Запрос</button>
+    <div>
+        api key : <input type="text" name="api-key" id="api-key"> <button class="request" onclick="requestAPI()">Запрос</button>
+    </div>
+    <div>
+        url: <input type="text" name="api-url" id="api-url">
+    </div>
     <div class="sms-item" >
         <div>#date</div>
         <div class="value" style="cursor: pointer;"> #value [COPY]</div>
@@ -78,34 +83,50 @@
     ];
 
         const API_KEY = "api-key"
+        const API_URL = "api-url"
         const savedApiKeyValue = localStorage.getItem(API_KEY)
+        const savedApiURLValue = localStorage.getItem(API_URL)
         const resultElement = document.querySelector('.result')
         const apiKeyInputElement = document.getElementById(API_KEY)
+        const apiURLInputElement = document.getElementById(API_URL)
         const SMSItemEl = document.querySelector('.sms-item')
         const requestEl = document.querySelector('.request')
         const isTrial = true
         let apiKeyValue = ''
+        let apiURLValue = ''
         if (savedApiKeyValue) {
             apiKeyValue = savedApiKeyValue
             apiKeyInputElement.value = savedApiKeyValue
+        }
+        if (savedApiURLValue) {
+            apiURLValue = savedApiURLValue
+            apiURLInputElement.value = savedApiURLValue
         }
         apiKeyInputElement.addEventListener('input', ({currentTarget:{value}})=>{
             localStorage.setItem(API_KEY, value)
             apiKeyValue = value
         })
+        apiURLInputElement.addEventListener('input', ({currentTarget:{value}})=>{
+            localStorage.setItem(API_URL, value)
+            apiURLValue = value
+        })
 
         function requestAPI() {
-            fetch("https://api.exolve.ru/messaging/v1/GetList", {
+            fetch(apiURLValue, {
                 headers: {
                     Authentication: 'Bearer ' + apiKeyValue
                 },
-                method: "POST"
+                method: "POST",
+                mode: "cors"
             }).then(res => {
-                console.log(res)
-            })
-            setTimeout(()=>handleRequestAPI(responseExpamle), 1000)
-        }
 
+                // handleRequestJSON(res.json())
+            })
+            
+        }
+        function handleRequestJSON(result) {
+            resultElement.innerHTML = `<pre><code> ${JSON.stringify(result)}</pre></code>`
+        }
         function handleRequestAPI(result) {
 
             result.forEach((item)=> {
