@@ -33,7 +33,7 @@
         api key : <input type="text" name="api-key" id="api-key"> <button class="request" onclick="requestAPI()">Запрос</button>
     </div>
     <div>
-        url: <input type="text" name="api-url" id="api-url">
+        url: <input type="text" value="https://jsonplaceholder.typicode.com/todos" name="api-url" id="api-url">
     </div>
     <div class="sms-item" >
         <div>#date</div>
@@ -116,20 +116,20 @@
                 headers: {
                     Authentication: 'Bearer ' + apiKeyValue
                 },
-                method: "POST",
+                method: "GET",
                 mode: "cors"
             }).then(res => {
-                if(res.status === 404) {
-                    fetch(apiURLValue, {
-                        headers: {
-                            Authentication: 'Bearer ' + apiKeyValue
-                        },
-                        method: "GET",
-                        mode: "cors"
-                    }).then((res)=>{
-                        res.json().then(handleRequestJSON)
-                    })
-                }
+                // if(res.status === 404) {
+                //     fetch(apiURLValue, {
+                //         headers: {
+                //             Authentication: 'Bearer ' + apiKeyValue
+                //         },
+                //         method: "GET",
+                //         mode: "cors"
+                //     }).then((res)=>{
+                //         res.json().then(handleRequestJSON)
+                //     })
+                // }
                 console.log(res)
                 res.json().then(handleRequestJSON)
             }).catch(e => {
