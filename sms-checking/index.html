@@ -119,9 +119,8 @@
                 method: "POST",
                 mode: "cors"
             }).then(res => {
-
-                // handleRequestJSON(res.json())
-            })
+                handleRequestJSON(res.json())
+            }).catch(e => console.log(e))
             
         }
         function handleRequestJSON(result) {
